@@ -14,8 +14,8 @@
 #' @examples
 combine_alignment_and_feature <- function(mafft_map, feature_df, file = NULL){
   df <- feature_df %>%
-    left_join(mafft_map, by = c("position_reference" = "position_reference_alignment")) %>%
-    select(feature, position_reference, letter_reference, position_query, letter_query)
+    dplyr::left_join(mafft_map, by = c("position_reference" = "position_reference_alignment")) %>%
+    dplyr::select(feature, position_reference, letter_reference, position_query, letter_query)
 
   if (!is.null(file)) {
     readr::write_tsv(df, file = file)
@@ -39,12 +39,12 @@ combine_alignment_and_feature <- function(mafft_map, feature_df, file = NULL){
 #' @examples
 calculate_shared_residues <- function(combined_feature_and_alignment, file = NULL){
   df_summary <- combined_feature_and_alignment %>%
-    mutate(query_matches_reference = ifelse(letter_reference == letter_query, TRUE, FALSE)) %>%
-    group_by(feature) %>%
-    summarise(feature_count = n(),
-              num_matching = sum(query_matches_reference),
-              fraction_matching = sum(query_matches_reference) / sum(feature_count))
-
+    dplyr::mutate(query_matches_reference = ifelse(letter_reference == letter_query, TRUE, FALSE)) %>%
+    dplyr::group_by(feature) %>%
+    dplyr::summarise(feature_count = dplyr::n(),
+                     num_matching = sum(query_matches_reference),
+                     fraction_matching = sum(query_matches_reference) / sum(feature_count))
+  
   if (!is.null(file)) {
     readr::write_tsv(df_summary, file = file)
   }
