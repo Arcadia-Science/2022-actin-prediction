@@ -1,10 +1,9 @@
-
 configfile: "config.yml"
 
 rule all:
     input:
-        expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}_{feature}.tsv", query_protein = config["query_protein"], feature = config["features"]),
-        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}_{feature}.tsv", query_protein = config["query_protein"], feature = config["features"])
+        expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
+        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
 
 #####################################################
 ## Predicting Actin polymerization & ATPase activity
@@ -44,8 +43,8 @@ rule calculate_shared_feature_residues:
         feature_df = "inputs/protein_features/{features}.csv",
         mafft_map = "query_proteins/{query_protein}.fasta.map",
     output:
-        df="outputs/shared_feature_residues/1_shared_residue_information/{query_protein}_{feature}.tsv",
-        df_summary="outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}_{feature}.tsv"
+        df="outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv",
+        df_summary="outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv"
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
