@@ -1,0 +1,5 @@
+protein_fasta: 'my_protein.fasta'
+features:
+ - atp_binding
+ - longitudinal_actin_contact
+ - lateral_actin_contact 

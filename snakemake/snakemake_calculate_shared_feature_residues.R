@@ -1,0 +1,10 @@
+source("R/read_mafft_map.R")
+source("R/read_feature_df.R")
+source("R/shared_residues.R")
+library(readr)
+library(dplyr)
+
+feature_df <- read_feature_df(snakemake@input[['feature_df']])
+mafft_map <- read_mafft_map(snakemake@input[['mafft_map']])
+df <- combine_alignment_and_feature(mafft_map = mafft_map, feature_df = feature_df, file = snakemake@output[['df']])
+df_summary <- calculate_shared_residues(combined_feature_and_alignment = df, file = snakemake@output[['df_summary']])
