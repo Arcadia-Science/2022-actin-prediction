@@ -48,4 +48,3 @@ rule calculate_shared_feature_residues:
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
-

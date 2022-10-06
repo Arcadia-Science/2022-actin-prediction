@@ -6,4 +6,3 @@
 .snakemake
 benchmarks/
 outputs/
-
