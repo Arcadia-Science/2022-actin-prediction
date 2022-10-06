@@ -1,0 +1,9 @@
+name: 'testthat'
+channels:
+   - conda-forge
+   - bioconda
+   - defaults
+dependencies:
+   - r-testthat=3.1.4
+   - r-dplyr=1.0.10
+   - r-readr=2.1.3
