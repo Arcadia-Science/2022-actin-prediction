@@ -2,8 +2,11 @@ configfile: "config.yml"
 
 rule all:
     input:
+        # PREDICTING FROM FEATURE RESIDUES
         expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
-        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
+        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
+        # PREDICTING FROM HMM MODELS
+        expand("outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out", query_protein = config["query_protein"])
 
 #####################################################
 ## Predicting Actin polymerization & ATPase activity
@@ -48,3 +51,30 @@ rule calculate_shared_feature_residues:
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
+
+#####################################################
+##
+#####################################################
+
+rule download_pfam:
+    output: "inputs/pfam/PF00022.hmm"
+    conda: "envs/hmmer.yml"
+    benchmark: "benchmarks/hmm/download_PF00022hmm.txt"
+    shell:'''
+    curl -JL --max-time 600 https://www.ebi.ac.uk/interpro/wwwapi//entry/pfam/PF00022?annotation=hmm | gunzip > {output}
+    hmmpress {output}
+    '''
+
+rule hmmscan:
+    input:
+        hmm = "inputs/pfam/PF00022.hmm",
+        query_protein = "query_proteins/{query_protein}.fasta"
+    output:
+        out = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out",
+        tbl = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-tbl.out",
+        dom = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-dom.out"
+    conda: "envs/hmmer.yml"
+    benchmark: "benchmarks/hmm/hmmscan_{query_protein}.txt"
+    shell:'''
+    hmmscan --cut_ga -o {output.out} --tblout {output.tbl} --domtblout {output.dom} {input.hmm} {input.query_protein} 
+    '''
