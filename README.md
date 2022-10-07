@@ -6,7 +6,7 @@ This repository uses a variety of computational approaches to predict whether a 
 
 **Included approaches**
 
-1. Fraction of residues shared between a query protein and an annotated actin protein.
+1. Fraction of specific functional residues shared between a query protein and an annotated actin protein.
 
 **Future approaches**
 
