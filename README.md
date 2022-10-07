@@ -1,4 +1,4 @@
-# Predicting the actin-ness of a protein using multiple computational criteria
+# Predicting whether a new protein fits into the conserved actin family using multiple computational criteria
 
 ## Purpose of this repository 
 
