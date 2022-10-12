@@ -15,21 +15,6 @@
 #' @examples
 #' read_feature_csv("inputs/protein_features/atp_binding.csv")
 read_feature_csv <- function(feature_csv){
-  # guard against missing package installations
-  if (!requireNamespace("readr", quietly = TRUE)) {
-    stop(
-      "Package \"readr\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop(
-      "Package \"dplyr\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-
   # functionality to read in feature data frame
   feature_df <- readr::read_csv(feature_csv,
                                 trim_ws = T,           # clean up white spaces so integers and NAs read in properly
