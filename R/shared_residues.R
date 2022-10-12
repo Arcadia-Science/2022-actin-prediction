@@ -44,7 +44,7 @@ combine_alignment_and_feature <- function(mafft_map, feature_df, tsv = NULL){
 #' If the file argument is specified, the function will output a tsv that summarizes the number of compared residues, the number of matching residues, and the fraction of matching residues.
 #'
 #' @param combined_feature_and_alignment
-#' @param file
+#' @param tsv
 #'
 #' @return A tibble.
 #' @export
