@@ -53,8 +53,13 @@ rule calculate_shared_feature_residues:
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
 
 #####################################################
-##
+## Predict actin homology using hidden markov models
 #####################################################
+
+# This section uses a hidden markov model (HMM) built from PFAM actin alignments to score query protein queries for actin homology.
+# The --cut_ga parameter passed to hmmscan filters homology predictions with low scores based on a profile-specific threshold.
+# This translates the continuous measure of homology (E-value, score) into a binary classification: 
+# only queries with strong homology to the hmm profile will pass the filtering threshold and be returned in the results.
 
 rule download_pfam:
     output: "inputs/pfam/PF00022.hmm"
