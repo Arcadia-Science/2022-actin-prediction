@@ -1,4 +1,4 @@
-configfile: "config.yml"
+configfile: "snakemake_config.yml"
 
 rule all:
     input:
