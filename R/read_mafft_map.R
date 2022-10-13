@@ -8,8 +8,9 @@
 #' @export
 #'
 #' @examples
-#' read_mafft_map("tests/testthat/O24426_CHLRE.fasta.map")
+#' read_mafft_map("tests/O24426_CHLRE.fasta.map")
 read_mafft_map <- function(mafft_map_file){
+  # read_mafft_map functionality
   mafft_map <- readr::read_csv(mafft_map_file,
                                skip = 2,          # skip mafft-generated metadata rows
                                col_names = c("letter_query", "position_query", "position_reference_alignment"), # reset col names

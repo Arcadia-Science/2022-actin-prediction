@@ -1,0 +1,7 @@
+query_protein: 
+ - P63258_ACTG_BOVIN
+ - P51775_ACT_GIAIN
+features:
+ - atp_binding
+ - longitudinal_actin_contact
+ - lateral_actin_contact 
