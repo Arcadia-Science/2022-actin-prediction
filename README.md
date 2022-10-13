@@ -7,7 +7,7 @@ This repository uses a variety of computational approaches to predict whether a 
 **Included approaches**
 
 1. Fraction of specific functional residues shared between a query protein and an annotated actin protein.
-2. Score with a hidden markov model using PFAM actin hmm. 
+2. Score query protein homology to PFAM actins with a hidden markov model.
 
 **Future approaches**
 
