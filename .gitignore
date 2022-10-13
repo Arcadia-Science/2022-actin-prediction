@@ -6,7 +6,7 @@
 .snakemake
 benchmarks/
 outputs/
-R/check_dependencies.R # unnecessary function to check dependency installs
+R/check_dependencies.R 
 inputs/pfam/
 inputs/sample_actins.fasta
 sandbox/
