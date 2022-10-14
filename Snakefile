@@ -2,10 +2,13 @@ configfile: "snakemake_config.yml"
 
 rule all:
     input:
+        # ESTIMATING PAIRWISE IDENTIT
+        expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"]),
+        # PREDICTING FROM FEATURE RESIDUES
         expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
         expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
-        expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"])
-
+        # PREDICTING FROM HMM MODELS
+        expand("outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out", query_protein = config["query_protein"])
 
 #####################################################
 ## Estimating average pairwise identity between a 
@@ -82,11 +85,53 @@ rule calculate_shared_feature_residues:
     Uses this information to calculcate the fraction of shared residues for each feature.
     '''
     input: 
-        feature_df = "inputs/protein_features/{features}.csv",
+        feature_csv = "inputs/protein_features/{features}.csv",
         mafft_map = "query_proteins/{query_protein}.fasta.map",
     output:
-        df="outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv",
-        df_summary="outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv"
+        tsv="outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv",
+        tsv_summary="outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv"
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
+
+#####################################################
+## Predict actin homology using hidden markov models
+#####################################################
+
+# This section uses a hidden markov model (HMM) built from PFAM actin alignments to score query protein queries for actin homology.
+# The --cut_ga parameter passed to hmmscan filters homology predictions with low scores based on a profile-specific threshold.
+# This translates the continuous measure of homology (E-value, score) into a binary classification: 
+# only queries with strong homology to the hmm profile will pass the filtering threshold and be returned in the results.
+# This section is built on PF00022, the PFAM profile for actin.
+# For more information, see https://www.ebi.ac.uk/interpro/entry/pfam/PF00022/
+
+rule download_pfam:
+    output: "inputs/pfam/PF00022.hmm"
+    benchmark: "benchmarks/hmm/PF00022-download-hmm.txt"
+    shell:'''
+    curl -JL --max-time 600 https://www.ebi.ac.uk/interpro/wwwapi//entry/pfam/PF00022?annotation=hmm | gunzip > {output}
+    '''
+
+rule hmmpress:
+    input: "inputs/pfam/PF00022.hmm"
+    output: "inputs/pfam/PF00022.hmm.h3i"
+    conda: "envs/hmmer.yml"
+    benchmark: "benchmarks/hmm/PF00022-hmmpress.txt"
+    shell:'''
+    hmmpress {input}
+    '''
+
+rule hmmscan:
+    input:
+        hmm = "inputs/pfam/PF00022.hmm",
+        hmmpress = "inputs/pfam/PF00022.hmm.h3i",
+        query_protein = "query_proteins/{query_protein}.fasta"
+    output:
+        out = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out",
+        tbl = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-tbl.out",
+        dom = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-dom.out"
+    conda: "envs/hmmer.yml"
+    benchmark: "benchmarks/hmm/hmmscan_{query_protein}.txt"
+    shell:'''
+    hmmscan --cut_ga -o {output.out} --tblout {output.tbl} --domtblout {output.dom} {input.hmm} {input.query_protein} 
+    '''
