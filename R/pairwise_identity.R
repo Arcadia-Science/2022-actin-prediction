@@ -80,9 +80,9 @@ plot_pid_df <- function(pid_df, pdf = NULL){
   # if a file path is given for pdf, save the image to a pdf
   if(!is.null(pdf)){
     ggplot2::ggsave(filename = pdf, plot = plt)
+  } else {
+    return(plt)
   }
-  
-  return(plt)
 }
 
 #' Read in a MSA fasta file, calculate pairwise identity, and plot.

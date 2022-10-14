@@ -2,8 +2,9 @@ configfile: "snakemake_config.yml"
 
 rule all:
     input:
-        expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
-        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
+        #expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
+        #expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
+        expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"])
 
 
 #####################################################
@@ -29,21 +30,22 @@ rule mafft_multiple_sequence_align_query_protein_and_confident_actins:
     It uses the program mafft-linsi, an alias for an accurate option (L-INS-i) for an alignment of up to ∼200 sequences × ∼2,000 sites.
     '''
     input: "outputs/mean_pid/{query_protein}_combined.fasta"
-    output: "outputs/mean_pid/"
+    output: "outputs/mean_pid/{query_protein}_msa.fasta"
     conda: "envs/mafft.yml"
-    benchmark: "benchmarks/"
+    benchmark: "benchmarks/msa_with_confident_actins_{query_protein}.txt"
     shell:'''
-    mafft-linsi {input} > output
+    mafft-linsi {input} > {output}
     '''
 
 rule calculate_pairwise_identity:
-    input:
-    output:
-    conda: ""
-    benchmark: "benchmarks/"
-    shell:'''
-    
-    '''
+    input: 
+        msa = "outputs/mean_pid/{query_protein}_msa.fasta"
+    output: 
+        tsv = "outputs/mean_pid/{query_protein}_pid.tsv",
+        pdf = "outputs/mean_pid/{query_protein}_pid.pdf",
+    conda: "envs/tidybio3d.yml"
+    benchmark: "benchmarks/calculate_pid_{query_protein}.txt"
+    script: "snakemake/snakemake_calculate_pairwise_identity.R"
 
 #####################################################
 ## Predicting Actin polymerization & ATPase activity
