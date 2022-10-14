@@ -10,3 +10,4 @@ R/check_dependencies.R
 inputs/pfam/
 inputs/sample_actins.fasta
 sandbox/
+query_proteins/*.map
