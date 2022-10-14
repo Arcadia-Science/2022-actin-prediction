@@ -63,11 +63,19 @@ rule calculate_shared_feature_residues:
 
 rule download_pfam:
     output: "inputs/pfam/PF00022.hmm"
-    conda: "envs/hmmer.yml"
-    benchmark: "benchmarks/hmm/download_PF00022hmm.txt"
+    benchmark: "benchmarks/hmm/PF00022-download-hmm.txt"
     shell:'''
     curl -JL --max-time 600 https://www.ebi.ac.uk/interpro/wwwapi//entry/pfam/PF00022?annotation=hmm | gunzip > {output}
     hmmpress {output}
+    '''
+
+rule hmmpress:
+    input: "inputs/pfam/PF00022.hmm"
+    output: "inputs/pfam/PF00022-hmmpress-done.txt"
+    conda: "envs/hmmer.yml"
+    benchmark: "benchmarks/hmm/PF00022-hmmpress.txt"
+    shell:'''
+    hmmpress {input} && touch {output}
     '''
 
 rule hmmscan:
