@@ -66,21 +66,21 @@ rule download_pfam:
     benchmark: "benchmarks/hmm/PF00022-download-hmm.txt"
     shell:'''
     curl -JL --max-time 600 https://www.ebi.ac.uk/interpro/wwwapi//entry/pfam/PF00022?annotation=hmm | gunzip > {output}
-    hmmpress {output}
     '''
 
 rule hmmpress:
     input: "inputs/pfam/PF00022.hmm"
-    output: "inputs/pfam/PF00022-hmmpress-done.txt"
+    output: "inputs/pfam/PF00022.hmm.h3i"
     conda: "envs/hmmer.yml"
     benchmark: "benchmarks/hmm/PF00022-hmmpress.txt"
     shell:'''
-    hmmpress {input} && touch {output}
+    hmmpress {input}
     '''
 
 rule hmmscan:
     input:
         hmm = "inputs/pfam/PF00022.hmm",
+        hmmpress = "inputs/pfam/PF00022.hmm.h3i",
         query_protein = "query_proteins/{query_protein}.fasta"
     output:
         out = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out",
