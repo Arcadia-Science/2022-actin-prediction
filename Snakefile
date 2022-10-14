@@ -5,6 +5,46 @@ rule all:
         expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
         expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
 
+
+#####################################################
+## Estimating average pairwise identity between a 
+## query protein and known actin protein sequences
+#####################################################
+
+# This section calculates pairwise identity between a query protein and a curated set of actin proteins that are confidentally actin protein sequences.
+
+rule create_fasta_file_with_confident_actins_and_query_proteins:
+    input:
+        confident_fasta="inputs/confident_actins.fasta",
+        query_fasta = "query_proteins/{query_protein}.fasta"
+    output: "outputs/mean_pid/{query_protein}_combined.fasta"
+    benchmark: "benchmarks/combine_with_confident_{query_protein}.txt"
+    shell:'''
+    cat {input.confident_fasta} {input.query_fasta} > {output}
+    ''' 
+
+rule mafft_multiple_sequence_align_query_protein_and_confident_actins:
+    '''
+    This rule generates a multiple sequence alignment between confident actins and a query protein sequence.
+    It uses the program mafft-linsi, an alias for an accurate option (L-INS-i) for an alignment of up to ∼200 sequences × ∼2,000 sites.
+    '''
+    input: "outputs/mean_pid/{query_protein}_combined.fasta"
+    output: "outputs/mean_pid/"
+    conda: "envs/mafft.yml"
+    benchmark: "benchmarks/"
+    shell:'''
+    mafft-linsi {input} > output
+    '''
+
+rule calculate_pairwise_identity:
+    input:
+    output:
+    conda: ""
+    benchmark: "benchmarks/"
+    shell:'''
+    
+    '''
+
 #####################################################
 ## Predicting Actin polymerization & ATPase activity
 #####################################################
