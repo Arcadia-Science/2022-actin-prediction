@@ -1,0 +1,6 @@
+channels:
+   - conda-forge
+   - bioconda
+   - defaults
+dependencies:
+   - entrez-direct=16.2
