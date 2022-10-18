@@ -1,13 +1,13 @@
 #' Calculate pairwise identity matrix for a FASTA multiple sequence alignment.
 #'
-#' @param msa_file Path to a multiple sequence alignment file in fasta format.
+#' @param msa_fasta_file Path to a multiple sequence alignment file in fasta format.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-calculate_pid_matrix <- function(msa_file){
-  msa <- bio3d::read.fasta(file = msa_file) # read in the MSA
+calculate_pid_matrix <- function(msa_fasta_file){
+  msa <- bio3d::read.fasta(file = msa_fasta_file) # read in the MSA
   mat <- bio3d::seqidentity(msa)            # calculate pairwise identity
   mat[lower.tri(mat, diag = TRUE)] <- NA    # fill the lower triangle with NAs 
   mat <- mat[-nrow(mat), -1]                # remove the diagonal
@@ -87,7 +87,7 @@ plot_pid_df <- function(pid_df, pdf = NULL){
 
 #' Read in a MSA fasta file, calculate pairwise identity, and plot.
 #'
-#' @param msa_file Path to a multiple sequence alignment file in fasta format.
+#' @param msa_fasta_file Path to a multiple sequence alignment file in fasta format.
 #' @param filter_to_query_protein  Boolean. Filter to the query protein sequence or return all pairwise identity values.
 #' @param tsv Path to output a tsv file of long format pairwise identity values.
 #' @param pdf Path to output a pdf file of the plot.
@@ -96,8 +96,8 @@ plot_pid_df <- function(pid_df, pdf = NULL){
 #' @export
 #'
 #' @examples
-read_msa_and_plot_pid <- function(msa_file, filter_to_query_protein = T, tsv = NULL, pdf = NULL){
-  pid_mat <- calculate_pid_matrix(msa_file)
+read_msa_and_plot_pid <- function(msa_fasta_file, filter_to_query_protein = T, tsv = NULL, pdf = NULL){
+  pid_mat <- calculate_pid_matrix(msa_fasta_file)
   pid_df <- pid_matrix_to_df(pid_mat, filter_to_query_protein = filter_to_query_protein, tsv = tsv)
   pid_df_for_plot <- pid_matrix_to_df(pid_mat, filter_to_query_protein = F)
   pid_plt <- plot_pid_df(pid_df = pid_df_for_plot, pdf = pdf)
