@@ -8,10 +8,10 @@ This repository uses a variety of computational approaches to predict whether a 
 
 1. Fraction of specific functional residues shared between a query protein and an annotated actin protein.
 2. Score query protein homology to PFAM actins with a hidden markov model.
+3. Average percent identity between a query protein and a set of known actin proteins using pairwise protein alignments.
 
 **Future approaches**
 
-1. Average percent identity between a query protein and a set of known actin proteins using pairwise protein alignments.
 2. Structure comparisons (TBD)
 
 ## Getting started with this repository
