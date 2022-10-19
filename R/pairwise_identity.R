@@ -9,7 +9,7 @@
 calculate_pid_matrix <- function(msa_fasta_file){
   msa <- bio3d::read.fasta(file = msa_fasta_file) # read in the MSA
   mat <- bio3d::seqidentity(msa)            # calculate pairwise identity
-  mat[lower.tri(mat, diag = TRUE)] <- NA    # fill the lower triangle with NAs 
+  mat[lower.tri(mat, diag = TRUE)] <- NA    # fill the lower triangle with NAs
   mat <- mat[-nrow(mat), -1]                # remove the diagonal
   return(mat)
 }
@@ -25,16 +25,16 @@ calculate_pid_matrix <- function(msa_fasta_file){
 #'
 #' @examples
 pid_matrix_to_df <- function(pid_mat, filter_to_query_protein = T, tsv = NULL){
-  # reformat the pid matrix from wide format to long format 
+  # reformat the pid matrix from wide format to long format
   df <- pid_mat %>%
     as.data.frame() %>%
-    tibble::rownames_to_column("seq1") %>%
-    tidyr::pivot_longer(cols = -seq1, names_to = "seq2", values_to = "fid") %>%
+    tibble::rownames_to_column("prot1") %>%
+    tidyr::pivot_longer(cols = -prot1, names_to = "prot2", values_to = "fid") %>%
     dplyr::filter(!is.na(fid)) %>%
-    dplyr::mutate(seq1 = forcats::fct_inorder(seq1),
-                  seq2 = forcats::fct_inorder(seq2),
+    dplyr::mutate(prot1 = forcats::fct_inorder(prot1),
+                  prot2 = forcats::fct_inorder(prot2),
                   pid = fid * 100)
-  
+
   # if a character string representing a protein name is provided, filter to this protein value
   if(filter_to_query_protein == T){
     # This is somewhat brittle but works in the context of our workflow.
@@ -43,19 +43,19 @@ pid_matrix_to_df <- function(pid_mat, filter_to_query_protein = T, tsv = NULL){
     # This is better than asking to supply to protein name:
     # In the context of a workflow, a user might encode their query_protein filename, therefore the wildcard, differently than the fasta sequence.
     # This would break the implementation if we filtered on protein name using the wildcard value.
-    
+
     query_protein <- colnames(pid_mat)[ncol(pid_mat)] # extract column name of last column of pid_mat...
-    df <- df %>% 
-      dplyr::filter(seq2 == query_protein)            # ... and use it to filter the df
+    df <- df %>%
+      dplyr::filter(prot2 == query_protein)            # ... and use it to filter the df
   }
-  
+
   # if a file path is provided for the tsv argument, write the data frame to a tsv file
   if(!is.null(tsv)){
     readr::write_tsv(df, file = tsv)
   }
-  
+
   return(df)
-} 
+}
 
 #' Use ggplot2 to plot pairwise identity information.
 #'
@@ -67,7 +67,7 @@ pid_matrix_to_df <- function(pid_mat, filter_to_query_protein = T, tsv = NULL){
 #'
 #' @examples
 plot_pid_df <- function(pid_df, pdf = NULL){
-  plt <- ggplot2::ggplot(pid_df, ggplot2::aes(x = seq1, y = seq2, fill = pid, label = round(pid))) +
+  plt <- ggplot2::ggplot(pid_df, ggplot2::aes(x = prot1, y = prot2, fill = pid, label = round(pid))) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(color = "white", size = 3) +
     ggplot2::theme_classic() +
@@ -76,7 +76,7 @@ plot_pid_df <- function(pid_df, pdf = NULL){
     ggplot2::scale_x_discrete(position = "top") +
     ggplot2::scale_fill_viridis_c() +
     ggplot2::coord_equal()
-  
+
   # if a file path is given for pdf, save the image to a pdf
   if(!is.null(pdf)){
     ggplot2::ggsave(filename = pdf, plot = plt)
