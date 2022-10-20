@@ -43,7 +43,7 @@ checkpoint determine_query_protein_accessions:
 
 rule download_query_protein_fastas:
     input: "outputs/blast/query_protein_fastas/.{query_protein_accession}.txt"
-    output: "outputs/blast/query_protein_fastas/{query_protein_accession}.fasta"
+    output: "query_proteins/{query_protein_accession}.fasta"
     conda: "envs/entrez-direct.yml"
     benchmark: "benchmarks/download_query_protein_fastas/{query_protein_accession}.txt"
     shell:'''
@@ -54,7 +54,7 @@ def checkpoint_determine_query_protein_accessions(wildcards):
     # Expand checkpoint to get fasta names, which will be used as query proteins for the main Snakefile
     # checkpoint_output encodes the output dir from the checkpoint rule.
     checkpoint_output = checkpoints.determine_query_protein_accessions.get(**wildcards).output[0]    
-    file_names = expand("outputs/blast/query_protein_fastas/{query_protein_accession}.fasta",
+    file_names = expand("query_proteins/{query_protein_accession}.fasta",
                         query_protein_accession = glob_wildcards(os.path.join(checkpoint_output, ".{query_protein_accession}.txt")).query_protein_accession)
     return file_names
 
