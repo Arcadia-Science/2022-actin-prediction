@@ -1,4 +1,4 @@
-configfile: "snakemake_config.yml"
+configfile: "snakemake_config_blast.yml"
 
 rule all:
     input:
