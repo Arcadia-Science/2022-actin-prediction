@@ -2,7 +2,7 @@ configfile: "snakemake_config_blast.yml"
 
 rule all:
     input:
-        # ESTIMATING PAIRWISE IDENTIT
+        # ESTIMATING PAIRWISE IDENTITY
         expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"]),
         # PREDICTING FROM FEATURE RESIDUES
         expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
