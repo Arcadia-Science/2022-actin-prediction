@@ -25,7 +25,7 @@ checkpoint determine_query_protein_accessions:
     input: "outputs/blast/blastp_results.out"
     output: directory("outputs/blast/query_protein_fastas/")
     run:
-        # check if output director exists, and if not, create it
+        # check if output directory exists, and if not, create it
         outdir = output[0]
         check_outdir_exists = os.path.isdir(outdir)
         if not check_outdir_exists:
