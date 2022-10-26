@@ -30,6 +30,23 @@ To start the pipeline, run:
 snakemake --use-conda -j 1
 ```
 
+## Description of files and running your own data
+
+The `Snakefile` orchestrates the pipeline that runs the computational approaches for actin prediction.
+The pipeline is controlled by a config file, the path to which occurs on the first line of the `Snakefile`: `configfile = "snakemake_config.yml"`.
+The config file provides two pieces of information: the functional predictions that should be executed (`atp_binding`, `longitudinal_actin_contact`, `lateral_actin_contact`) and the root name of the query protein sequences that the pipeline should be run on (`P63258_ACTG_BOVIN`).
+
+To run your own protein of interest through the pipeline, copy the `snakemake_config.yml`, rename it, and replace the root name of the query protein sequence with the root name of your query protein sequence.
+This should be everything that occurs before `*.fasta` in your protein sequence file name.
+Put your protein sequence in the `query_proteins` directory.
+Lastly, replace the path in the first line of the `Snakefile` with the path to your new config file and follow the "Getting started" instructions above.
+
+Two config files are included in this repository: `snakemake_config.yml` and `snakemake_config_blast.yml`. 
+`snakemake_config.yml` specifies two query protein sequences, and we have included these examples in this repository.
+If you'd like to test the pipeline, you can run it with this config file by writing `configfile = "snakemake_config.yml"` on the first line of the `Snakefile`.
+The `snakemake_config_blast.yml` specifies 50k additional protein query sequences. 
+We obtained these sequences by running the `blast.snakefile` to download them.
+
 ## Developer instructions
 
 ### Snakemake
