@@ -148,7 +148,7 @@ checkpoint chunk_genbank_accessions_for_uniprot_id_conversion:
     In this case, we'll dynamically determine how many "chunks" we need from our input accessions to limit each uniprot API query to 10k or fewer protein accessions.
     '''
     input: expand("query_proteins/{query_protein}.fasta", query_protein = config["query_protein"])
-    output: directory("outputs/foldseek/chunked_accessions/")
+    output: outdir=directory("outputs/foldseek/chunked_accessions/")
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/foldseek/chunk_query_proteins.txt"
     script: "snakemake/snakemake_chunk_genbank_accessions_for_uniprot_id_conversion.R" 
@@ -212,4 +212,5 @@ def chunk_genbank_accessions_for_uniprot_id_conversion(wildcards):
                         grp = glob_wildcards(os.path.join(checkpoint_output, "genbank_accessions_chunk{grp}.txt")).grp)
     return file_names
 
-#rule combine_uniprot_id_conversions:
+rule combine_uniprot_id_conversions:
+    input: chunk_genbank_accessions_for_uniprot_id_conversion
