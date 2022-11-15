@@ -5,7 +5,7 @@ gb_accs <- basename(unlist(snakemake@input[['fastas']]))
 gb_accs <- gsub(".fasta", "", gb_accs)
 
 print(gb_accs)
-ngrps <- ceiling(length(gb_accs) / 10000)
+ngrps <- ceiling(length(gb_accs) / 15000)
 grp <- rep(1:ngrps, times = length(gb_accs)/ngrps)
 
 if(length(grp) != length(gb_accs)) {

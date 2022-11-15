@@ -211,7 +211,8 @@ rule convert_genbank_protein_accession_to_uniprot_accessions:
         else
             waiting=0
             echo "downloading results"
-            curl -s "https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?format=tsv" > {output.results} # download the mapped ids.
+            #curl -s "https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?format=tsv" > {output.results} # download the mapped ids.
+            curl -JLo {output.results} https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?fields=accession%2Cid%2Creviewed%2Cprotein_name%2Cgene_names%2Corganism_name%2Clength&format=tsv
         fi
     done
     """
@@ -225,4 +226,44 @@ def chunk_genbank_accessions_for_uniprot_id_conversion(wildcards):
     return file_names
 
 rule combine_uniprot_id_conversions:
-    input: chunk_genbank_accessions_for_uniprot_id_conversion
+    input: results=chunk_genbank_accessions_for_uniprot_id_conversion,
+    output: tsv = "outputs/foldseek/uniprot_accessions/results.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/foldseek/convert_genbank_to_uniprot_combine_results.txt"
+    script: "snakemake/snakemake_combine_uniprot_id_conversions.R"
+
+checkpoint create_dummy_files_for_uniprot_accession_wildcard:
+    input: tsv = "outputs/foldseek/uniprot_accessions/results.tsv"
+    output: outdir = directory("outputs/foldseek/uniprot_accessions_wc/")
+    script: "snakemake/snakemake_create_dummy_files_for_uniprot_accession_wildcard.R"
+
+rule download_alphafold_pdb_files_for_uniprot_accessions:
+    input: "outputs/foldseek/uniprot_accessions_wc/{uniprot_acc}.txt"
+    output: "outputs/foldseek/uniprot_alphafold_pdb_structures/AF-{uniprot_acc}-F1-model_V4.pdb"
+    conda: "envs/curl.yml"
+    benchmark: "benchmarks/foldseek/download_alphafold_pdb_files/{uniprot_acc}.txt"
+    shell:'''
+    curl -JLo {output} https://alphafold.ebi.ac.uk/files/AF-{wildcards.uniprot_acc}-F1-model_v4.pdb
+    '''
+
+def create_dummy_files_for_uniprot_accession_wildcard(wildcards):
+    # expand checkpoint to get uniprot acc values, and place them in the final file name that uses that wildcard
+    # checkpoint_output encodes the output dir from the checkpoint rule. 
+    checkpoint_output = checkpoints.create_dummy_files_for_uniprot_accession_wildcard.get(**wildcards).output[0]    
+    file_names = expand("outputs/foldseek/foldseek/{uniprot_acc}_vs_1j6z.tsv",
+                        uniprot_acc = glob_wildcards(os.path.join(checkpoint_output, "{uniprot_acc}.txt")).uniprot_acc)
+    return file_names
+
+rule run_foldseek:
+    input:
+        reference = "inputs/pdb/1j6z.pdb",
+        query = "outputs/foldseek/uniprot_alphafold_pdb_structures/AF-{uniprot_acc}-F1-model_V4.pdb"
+    output: "outputs/foldseek/foldseek/{uniprot_acc}_vs_1j6z.tsv"
+    params: refdir = "inputs/pdb/"
+    conda: "envs/foldseek.yml"
+    shell:'''
+    foldseek easy-search {input.query} {params.refdir} {output} tmp_foldseek_folder 
+    '''
+
+rule tmp:
+    input: create_dummy_files_for_uniprot_accession_wildcard
