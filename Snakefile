@@ -155,9 +155,7 @@ checkpoint chunk_genbank_accessions_for_uniprot_id_conversion:
 
 rule make_query_form: 
     """
-    This will be lossy -- not every genbank accession will have a uniprot accession.
-    This could be broken up into 3 separate rules, but I think I like it better as one rule?
-    The first would be to make the query_form, the second would make the query, and the third would create the job id, check the status, and download results
+    This rule formats the genbank accessions into a uniprot API query
     """
     input: "outputs/foldseek/chunked_accessions/genbank_accessions_chunk{grp}.txt"
     output:
@@ -172,6 +170,14 @@ rule make_query_form:
     """
 
 rule convert_genbank_protein_accession_to_uniprot_accessions:
+    """
+    This rule converts a genbank accessions to uniprot using the api query created in make_query_form.
+    It submits the query to the api, checks the status of the query, and then downloads the results when the query is done running
+    This will be lossy -- not every genbank accession will have a uniprot accession.
+    This could be broken up into 2 rules, but I think I like it better as one?
+    The first would make the query and the second would create the job id, check the status, and download results
+    I like it as one so that the query submission is coupled with the download. 
+    """
     input: query_form="outputs/foldseek/uniprot_accessions/query_form{grp}.txt",
     output:
         query="outputs/foldseek/uniprot_accessions/query{grp}.txt",
