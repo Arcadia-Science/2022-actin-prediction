@@ -136,7 +136,6 @@ rule hmmscan:
     hmmscan --cut_ga -o {output.out} --tblout {output.tbl} --domtblout {output.dom} {input.hmm} {input.query_protein} 
     '''
 
-
 #########################################################
 ## Compare structure of query protein against known actin
 #########################################################
