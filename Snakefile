@@ -254,6 +254,9 @@ def create_dummy_files_for_uniprot_accession_wildcard(wildcards):
     return file_names
 
 rule run_foldseek:
+    """
+    The reference sequence is rabbit actin and was downloaded from this web page: https://www.rcsb.org/structure/1J6Z
+    """
     input:
         reference = "inputs/pdb/1j6z.pdb",
         query = "outputs/foldseek/uniprot_alphafold_pdb_structures/AF-{uniprot_acc}-F1-model_V4.pdb"
