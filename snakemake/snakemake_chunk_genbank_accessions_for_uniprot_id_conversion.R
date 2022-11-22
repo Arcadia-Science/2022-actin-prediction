@@ -1,8 +1,15 @@
 library(dplyr)
 library(readr)
 
+# gb_accs stands for genbank accessions.
+# it's solved from the input fasta files, which are named by their genbank protien accessions.
 gb_accs <- basename(unlist(snakemake@input[['fastas']]))
 gb_accs <- gsub(".fasta", "", gb_accs)
+
+# ngrps is the number of groups to chunk the file into.
+# we used 15000 as the chunk size.
+# the code following ngrps creates a vector that will be used by dplyr::group_by to write each chunk of 15k to it's own file.
+# it deals with potentially uneven sizes from the chunking.
 
 ngrps <- ceiling(length(gb_accs) / 15000)
 grp <- rep(1:ngrps, times = length(gb_accs)/ngrps)
