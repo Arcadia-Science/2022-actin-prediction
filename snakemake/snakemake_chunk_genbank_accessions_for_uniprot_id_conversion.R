@@ -4,7 +4,6 @@ library(readr)
 gb_accs <- basename(unlist(snakemake@input[['fastas']]))
 gb_accs <- gsub(".fasta", "", gb_accs)
 
-print(gb_accs)
 ngrps <- ceiling(length(gb_accs) / 15000)
 grp <- rep(1:ngrps, times = length(gb_accs)/ngrps)
 
@@ -29,7 +28,7 @@ if(dir.exists(snakemake@output[['outdir']]) == FALSE){
 }
 # group by the grp variable and write to output
 data.frame(acc = gb_accs) %>% 
-  mutate(grp = grp) %>% 
-  group_by(grp) %>%
+  dplyr::mutate(grp = grp) %>% 
+  dplyr::group_by(grp) %>%
   group_walk(~ write_tsv(.x, paste0(snakemake@output[['outdir']], "/genbank_accessions_chunk", .y$grp, ".txt"),
                          col_names = F))
