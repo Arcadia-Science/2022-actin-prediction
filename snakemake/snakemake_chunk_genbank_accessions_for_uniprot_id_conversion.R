@@ -37,5 +37,5 @@ if(dir.exists(snakemake@output[['outdir']]) == FALSE){
 data.frame(acc = gb_accs) %>% 
   dplyr::mutate(grp = grp) %>% 
   dplyr::group_by(grp) %>%
-  group_walk(~ write_tsv(.x, paste0(snakemake@output[['outdir']], "/genbank_accessions_chunk", .y$grp, ".txt"),
+  dplyr::group_walk(~ readr::write_tsv(.x, paste0(snakemake@output[['outdir']], "/genbank_accessions_chunk", .y$grp, ".txt"),
                          col_names = F))
