@@ -2,7 +2,7 @@ library(dplyr)
 library(readr)
 
 # gb_accs stands for genbank accessions.
-# it's solved from the input fasta files, which are named by their genbank protien accessions.
+# it's solved from the input fasta files, which are named by their genbank protein accessions.
 gb_accs <- basename(unlist(snakemake@input[['fastas']]))
 gb_accs <- gsub(".fasta", "", gb_accs)
 
