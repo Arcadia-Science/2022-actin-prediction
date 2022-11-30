@@ -37026,7 +37026,6 @@ query_protein:
   - XP_044492108.1
   - XP_016638300.1
   - XP_038994069.1
-  - AID23538.1
   - XP_014383713.1
   - XP_012518006.1
   - XP_025867688.1
@@ -48404,5 +48403,5 @@ query_protein:
   - KAG1768533.1
 features:
   - atp_binding
-  - longitudinal_actin_contact
+  - lateral_actin_contact
   - longitudinal_actin_contact

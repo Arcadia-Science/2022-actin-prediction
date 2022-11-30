@@ -2,11 +2,11 @@ library(readr)
 library(dplyr)
 library(purrr)
 
-pid_files <- Sys.glob("outputs/mean_pid/*tsv")
+#pid_files <- Sys.glob("outputs/mean_pid/*tsv")
 pid_files <- unlist(snakemake@input[['tsv']])
 
 pid <- pid_files %>%
-  purrr::map_dfr(readr::read_tsv, show_col_types = F, .id = "filename")
+  purrr::map_dfr(readr::read_tsv, show_col_types = F)
 
 readr::write_tsv(pid, file = snakemake@output[['pid']])
 
