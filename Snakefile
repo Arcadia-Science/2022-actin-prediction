@@ -2,13 +2,7 @@ configfile: "snakemake_config_blast.yml"
 
 rule all:
     input:
-        # ESTIMATING PAIRWISE IDENTITY
-        expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"]),
-        # PREDICTING FROM FEATURE RESIDUES
-        expand("outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
-        expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"]),
-        # PREDICTING FROM HMM MODELS
-        expand("outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out", query_protein = config["query_protein"])
+        "outputs/all_outputs_combined.tsv"
 
 #####################################################
 ## Estimating average pairwise identity between a 
@@ -49,6 +43,15 @@ rule calculate_pairwise_identity:
     conda: "envs/tidybio3d.yml"
     benchmark: "benchmarks/calculate_pid_{query_protein}.txt"
     script: "snakemake/snakemake_calculate_pairwise_identity.R"
+
+rule combine_pairwise_identity_outputs:
+    input: tsv = expand("outputs/mean_pid/{query_protein}_pid.tsv", query_protein = config["query_protein"])
+    output:
+        pid = "outputs/mean_pid/all_pid.tsv",
+        avg_pid = "outputs/mean_pid/all_avg_pid.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/combine_pid.txt"
+    script: "snakemake/snakemake_combine_pairwise_identity_outputs.R"
 
 #####################################################
 ## Predicting Actin polymerization & ATPase activity
@@ -94,6 +97,14 @@ rule calculate_shared_feature_residues:
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
 
+rule combine_shared_feature_residue_outputs:
+    input: 
+        tsv_summaries = expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
+    output: all_features = "outputs/shared_feature_residues/3_shared_residue_summaries_combined/all_shared_residues_combined.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/combine_shared_feature_residues.txt"
+    script: "snakemake/snakemake_combine_shared_feature_residue_outputs.R"
+
 #####################################################
 ## Predict actin homology using hidden markov models
 #####################################################
@@ -135,6 +146,22 @@ rule hmmscan:
     shell:'''
     hmmscan --cut_ga -o {output.out} --tblout {output.tbl} --domtblout {output.dom} {input.hmm} {input.query_protein} 
     '''
+
+rule download_hmm_parser:
+    output: "scripts/rhmmer_parse.R"
+    conda: "envs/curl.yml"
+    shell:'''
+    curl -JLo {output} https://raw.githubusercontent.com/arendsee/rhmmer/master/R/parse.R
+    '''
+
+rule combine_hmm_outputs:
+    input:
+        rhmmer = "scripts/rhmmer_parse.R",
+        tbl = expand("outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-tbl.out", query_protein = config["query_protein"]) 
+    output: all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/combine_hmm.txt"
+    script: "snakemake/snakemake_combine_hmm_outputs.R"
 
 #########################################################
 ## Compare structure of query protein against known actin
@@ -267,5 +294,27 @@ rule run_foldseek:
     foldseek easy-search {input.query} {params.refdir} {output} tmp_foldseek_folder 
     '''
 
-rule tmp:
-    input: create_dummy_files_for_uniprot_accession_wildcard
+rule combine_foldseek_outputs:
+    input:
+        uniprot_acc = "outputs/foldseek/uniprot_accessions/results.tsv",
+        fsk = create_dummy_files_for_uniprot_accession_wildcard
+    output: all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/combine_foldseek.txt"
+    script: "snakemake/snakemake_combine_foldseek_outputs.R"
+
+#########################################################
+## Combine all outputs
+#########################################################
+
+rule combine_all_outputs:
+    input:
+        avg_pid = "outputs/mean_pid/all_avg_pid.tsv",
+        all_features = "outputs/shared_feature_residues/3_shared_residue_summaries_combined/all_shared_residues_combined.tsv",
+        all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv",
+        all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv",
+        class_map = "inputs/uniprot_gene_name_to_class_map.tsv"
+    output: all_outputs = "outputs/all_outputs_combined.tsv"
+    conda: "envs/tidyverse.yml"
+    benchmark: "benchmarks/combine_all_outputs.txt"
+    script: "snakemake/snakemake_combine_all_outputs.R"
