@@ -1,0 +1,7 @@
+channels:
+   - conda-forge
+   - bioconda
+   - defaults
+dependencies:
+   - r-tidyverse=1.3.2
+   - r-showtext=0.9
