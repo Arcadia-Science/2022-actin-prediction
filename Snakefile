@@ -2,7 +2,24 @@ configfile: "snakemake_config_blast.yml"
 
 rule all:
     input:
-        "outputs/all_outputs_combined.tsv"
+        fig2b = "figures/figure2b.pdf",
+        fig2c = "figures/figure2c.pdf",
+        fig3e = "figures/figure3e.pdf",
+        fig3f = "figures/figure3f.pdf",
+        fig4c = "figures/figure4c.pdf",
+        fig4d = "figures/figure4d.pdf",
+        fig4e = "figures/figure4e.pdf",
+        fig4f = "figures/figure4f.pdf",
+        fig4g = "figures/figure4g.pdf",
+        fig4h = "figures/figure4h.pdf",
+        fig5c = "figures/figure5c.pdf",
+        fig5d = "figures/figure5d.pdf",
+        fig5e = "figures/figure5e.pdf",
+        fig5f = "figures/figure5f.pdf",
+        fig6a = "figures/figure6a.pdf",
+        fig6b = "figures/figure6b.pdf",
+        fig6c = "figures/figure6c.pdf",
+        fig6d = "figures/figure6d.pdf"
 
 #####################################################
 ## Estimating average pairwise identity between a 
@@ -309,12 +326,39 @@ rule combine_foldseek_outputs:
 
 rule combine_all_outputs:
     input:
+        blast = "outputs/blast/blastp_results_empty_rm.out",
         avg_pid = "outputs/mean_pid/all_avg_pid.tsv",
         all_features = "outputs/shared_feature_residues/3_shared_residue_summaries_combined/all_shared_residues_combined.tsv",
         all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv",
         all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv",
         class_map = "inputs/uniprot_gene_name_to_class_map.tsv"
-    output: all_outputs = "outputs/all_outputs_combined.tsv"
+    output: all_outputs = "outputs/all_outputs_summarized.tsv"
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_all_outputs.txt"
     script: "snakemake/snakemake_combine_all_outputs.R"
+
+rule plot_outputs:
+    input:
+        all_outputs = "outputs/all_outputs_summarized.tsv"
+    output:
+        fig2b = "figures/figure2b.pdf",
+        fig2c = "figures/figure2c.pdf",
+        fig3e = "figures/figure3e.pdf",
+        fig3f = "figures/figure3f.pdf",
+        fig4c = "figures/figure4c.pdf",
+        fig4d = "figures/figure4d.pdf",
+        fig4e = "figures/figure4e.pdf",
+        fig4f = "figures/figure4f.pdf",
+        fig4g = "figures/figure4g.pdf",
+        fig4h = "figures/figure4h.pdf",
+        fig5c = "figures/figure5c.pdf",
+        fig5d = "figures/figure5d.pdf",
+        fig5e = "figures/figure5e.pdf",
+        fig5f = "figures/figure5f.pdf",
+        fig6a = "figures/figure6a.pdf",
+        fig6b = "figures/figure6b.pdf",
+        fig6c = "figures/figure6c.pdf",
+        fig6d = "figures/figure6d.pdf"
+    conda: "envs/tidyplot.yml"
+    benchmark: "benchmarks/plot_outputs.txt"
+    script: "snakemake/snakemake_plot_outputs.R"
