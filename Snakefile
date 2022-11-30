@@ -2,24 +2,24 @@ configfile: "snakemake_config_blast.yml"
 
 rule all:
     input:
-        fig2b = "figures/figure2b.pdf",
-        fig2c = "figures/figure2c.pdf",
-        fig3e = "figures/figure3e.pdf",
-        fig3f = "figures/figure3f.pdf",
-        fig4c = "figures/figure4c.pdf",
-        fig4d = "figures/figure4d.pdf",
-        fig4e = "figures/figure4e.pdf",
-        fig4f = "figures/figure4f.pdf",
-        fig4g = "figures/figure4g.pdf",
-        fig4h = "figures/figure4h.pdf",
-        fig5c = "figures/figure5c.pdf",
-        fig5d = "figures/figure5d.pdf",
-        fig5e = "figures/figure5e.pdf",
-        fig5f = "figures/figure5f.pdf",
-        fig6a = "figures/figure6a.pdf",
-        fig6b = "figures/figure6b.pdf",
-        fig6c = "figures/figure6c.pdf",
-        fig6d = "figures/figure6d.pdf"
+        "figures/figure2b.pdf",
+        "figures/figure2c.pdf",
+        "figures/figure3e.pdf",
+        "figures/figure3f.pdf",
+        "figures/figure4c.pdf",
+        "figures/figure4d.pdf",
+        "figures/figure4e.pdf",
+        "figures/figure4f.pdf",
+        "figures/figure4g.pdf",
+        "figures/figure4h.pdf",
+        "figures/figure5c.pdf",
+        "figures/figure5d.pdf",
+        "figures/figure5e.pdf",
+        "figures/figure5f.pdf",
+        "figures/figure6a.pdf",
+        "figures/figure6b.pdf",
+        "figures/figure6c.pdf",
+        "figures/figure6d.pdf"
 
 #####################################################
 ## Estimating average pairwise identity between a 

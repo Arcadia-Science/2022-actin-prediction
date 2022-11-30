@@ -46,7 +46,7 @@ fig2b <- ggplot(all, aes(x = reorder(protein, avg_pid), y = avg_pid)) +
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig2b']], width = 5, height = 3)
+pdf(snakemake@output[['fig2b']], width = 5, height = 3)
 fig2b
 dev.off()
 
@@ -56,7 +56,7 @@ fig2c <- ggplot(all, aes(x = avg_pid)) +
   labs(y = "Number of values", x = "Average global sequence identity (%)") +
   theme_arcadia
 
-pdf(snakemake@input[['fig2c']], width = 5, height = 3)
+pdf(snakemake@output[['fig2c']], width = 5, height = 3)
 fig2c
 dev.off()
 
@@ -71,7 +71,7 @@ fig3e <- ggplot(all %>% filter(!is.na(evalue_transform)),
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig3e']], width = 5, height = 3)
+pdf(snakemake@output[['fig3e']], width = 5, height = 3)
 fig3e
 dev.off()
 
@@ -83,7 +83,7 @@ fig3f <- ggplot(all %>% filter(!is.na(evalue_transform)),
   labs(x = "Average global percent identity (%)", y = "Structural similarity") +
   theme_arcadia
 
-pdf(snakemake@input[['fig3f']], width = 5, height = 3)
+pdf(snakemake@output[['fig3f']], width = 5, height = 3)
 fig3f
 dev.off()
 
@@ -99,7 +99,7 @@ fig4c <- ggplot(all %>%
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig4c']], width = 5, height = 3)
+pdf(snakemake@output[['fig4c']], width = 5, height = 3)
 fig4c
 dev.off()
 
@@ -113,7 +113,7 @@ fig4d <- ggplot(all %>%
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig4d']], width = 5, height = 3)
+pdf(snakemake@output[['fig4d']], width = 5, height = 3)
 fig4d
 dev.off()
 
@@ -127,7 +127,7 @@ fig4e <- ggplot(all %>%
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig4e']], width = 5, height = 3)
+pdf(snakemake@output[['fig4e']], width = 5, height = 3)
 fig4e
 dev.off()
 
@@ -140,7 +140,7 @@ fig4f <- ggplot(all %>%
   labs(y = "Number of values", x = "Total polymerization contact conservation (%)") +
   theme_arcadia
 
-pdf(snakemake@input[['fig4f']], width = 5, height = 3)
+pdf(snakemake@output[['fig4f']], width = 5, height = 3)
 fig4f
 dev.off()
 
@@ -151,7 +151,7 @@ fig4g <- ggplot(all %>% filter(!is.na(w_avg_contacts)),
   theme_arcadia +
   scale_y_continuous(limits = c(0, 101), expand = c(0, 0))
 
-pdf(snakemake@input[['fig4g']], width = 5, height = 3)
+pdf(snakemake@output[['fig4g']], width = 5, height = 3)
 fig4g
 dev.off()
 
@@ -163,7 +163,7 @@ fig4h <- ggplot(all %>% filter(!is.na(w_avg_contacts)),
   scale_y_continuous(limits = c(0, 101), expand = c(0, 0)) +
   scale_x_continuous(limits = c(0, 80))
 
-pdf(snakemake@input[['fig4h']], width = 5, height = 3)
+pdf(snakemake@output[['fig4h']], width = 5, height = 3)
 fig4h
 dev.off()
 
@@ -179,7 +179,7 @@ fig5c <- ggplot(all %>%
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank())
 
-pdf(snakemake@input[['fig5c']], width = 5, height = 3)
+pdf(snakemake@output[['fig5c']], width = 5, height = 3)
 fig5c
 dev.off()
 
@@ -192,7 +192,7 @@ fig5d <- ggplot(all %>%
   labs(y = "Number of values", x = "ATP-binding site conservation (%)") +
   theme_arcadia
 
-pdf(snakemake@input[['fig5d']], width = 5, height = 3)
+pdf(snakemake@output[['fig5d']], width = 5, height = 3)
 fig5d
 dev.off()
 
@@ -204,7 +204,7 @@ fig5e <- ggplot(all %>% filter(!is.na(atp_fraction_matching)),
   scale_y_continuous(limits = c(0, 105), expand = c(0, 0)) +
   scale_x_continuous(limits = c(0, 105))
 
-pdf(snakemake@input[['fig5e']], width = 5, height = 3)
+pdf(snakemake@output[['fig5e']], width = 5, height = 3)
 fig5e
 dev.off()
 
@@ -216,7 +216,7 @@ fig5f <- ggplot(all %>% filter(!is.na(atp_fraction_matching)),
   scale_y_continuous(limits = c(0, 105), expand = c(0, 0)) +
   scale_x_continuous(limits = c(0, 80))
 
-pdf(snakemake@input[['fig5f']], width = 5, height = 3)
+pdf(snakemake@output[['fig5f']], width = 5, height = 3)
 fig5f
 dev.off()
 
@@ -232,11 +232,11 @@ fig6a <- ggplot(all_with_class, aes(x = avg_pid, fill = class)) +
   scale_fill_manual(values = c("#292928", "#9988DA", "#F7B846"),
                     labels = c('"Actin"', '"Actin-like"', '"Actin-related"'))
 
-pdf(snakemake@input[['fig6a']], width = 5, height = 3)
+pdf(snakemake@output[['fig6a']], width = 5, height = 3)
 fig6a
 dev.off()
 
-fig6b <-  ggplot(features_class, aes(x = avg_pid, y = evalue_transform, color = class)) +
+fig6b <-  ggplot(all_with_class, aes(x = avg_pid, y = evalue_transform, color = class)) +
   geom_point(size = .5) +
   xlim(0, 100) + 
   scale_y_continuous(limits = c(0, 80), expand = c(0, 0)) +
@@ -250,13 +250,13 @@ fig6b <-  ggplot(features_class, aes(x = avg_pid, y = evalue_transform, color = 
 # they aren't in the pub at the moment because the arcadia font wouldn't work with gridExtra (a dependency of ggExtra)
 #tmp <- ggExtra::ggMarginal(fig6b, type = "density", groupFill = T, groupColour = T)
 
-pdf(snakemake@input[['fig6b']], width = 5, height = 3)
+pdf(snakemake@output[['fig6b']], width = 5, height = 3)
 fig6b
 dev.off()
 
-fig6c <- ggplot(features_class %>% filter(!is.na(w_avg_contacts)),
+fig6c <- ggplot(all_with_class %>% filter(!is.na(w_avg_contacts)),
                 aes(x = avg_pid, y = w_avg_contacts * 100, color = class)) +
-  geom_point(size = 1, alpha = 1) +
+  geom_point(size = 1) +
   labs(x = "Average global sequence identity (%)", y = "Total polymerization contact\nconservation (%)") +
   theme_arcadia +
   theme(legend.position = "none") +
@@ -265,11 +265,11 @@ fig6c <- ggplot(features_class %>% filter(!is.na(w_avg_contacts)),
   scale_y_continuous(limits = c(0, 101), expand = c(0, 0), breaks = c(0, 25, 50, 75, 100)) +
   scale_x_continuous(limits = c(0, 101), expand = c(0, 0), breaks = c(0, 25, 50, 75, 100)) 
 
-pdf(snakemake@input[['fig6c']], width = 5, height = 3)
+pdf(snakemake@output[['fig6c']], width = 5, height = 3)
 fig6c
 dev.off()
 
-fig6d <- ggplot(features_class %>% filter(!is.na(atp_fraction_matching)),
+fig6d <- ggplot(all_with_class %>% filter(!is.na(atp_fraction_matching)),
                 aes(x = avg_pid, y = atp_fraction_matching * 100, color = class)) +
   geom_point(size = 1) +
   labs(x = "Average global sequence identity (%)", y = "ATP-binding site\nconservation (%)") +
@@ -280,6 +280,6 @@ fig6d <- ggplot(features_class %>% filter(!is.na(atp_fraction_matching)),
   scale_y_continuous(limits = c(0, 101), expand = c(0, 0), breaks = c(0, 25, 50, 75, 100)) +
   scale_x_continuous(limits = c(0, 101), breaks = c(0, 25, 50, 75, 100))
 
-pdf(snakemake@input[['fig6d']], width = 5, height = 3)
+pdf(snakemake@output[['fig6d']], width = 5, height = 3)
 fig6d
 dev.off()
