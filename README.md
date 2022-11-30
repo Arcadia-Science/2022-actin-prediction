@@ -41,8 +41,9 @@ Lastly, replace the path in the first line of the `Snakefile` with the path to y
 Two config files are included in this repository: `snakemake_config.yml` and `snakemake_config_blast.yml`. 
 `snakemake_config.yml` specifies two query protein sequences, and we have included these examples in this repository.
 If you'd like to test the pipeline, you can run it with this config file by writing `configfile = "snakemake_config.yml"` on the first line of the `Snakefile`.
-The `snakemake_config_blast.yml` specifies 50k additional protein query sequences. 
+The `snakemake_config_blast.yml` specifies ~50k additional protein query sequences. 
 We obtained these sequences by running the `blast.snakefile` to download them.
+Note that due to an error in the NCBI entrez API (`Invalid uid * at position= 0`), only 48406 of the 50k sequences were downloadable, so only these were included in our analysis. 
 
 ## Developer instructions
 
