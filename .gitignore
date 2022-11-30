@@ -5,6 +5,7 @@
 .DS_store
 .snakemake
 benchmarks/
+outputs.tar.gz
 outputs/
 R/check_dependencies.R 
 inputs/pfam/
@@ -12,3 +13,7 @@ inputs/sample_actins.fasta
 sandbox/
 query_proteins/*.map
 query_proteins/*fasta
+inputs/SuisseIntl-Regular.otf
+qpa_done.txt
+scripts/rhmmer_parse.R
+*swp
