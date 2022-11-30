@@ -2,7 +2,6 @@ library(readr)
 library(dplyr)
 library(purrr)
 
-#pid_files <- Sys.glob("outputs/mean_pid/*tsv")
 pid_files <- unlist(snakemake@input[['tsv']])
 
 pid <- pid_files %>%
