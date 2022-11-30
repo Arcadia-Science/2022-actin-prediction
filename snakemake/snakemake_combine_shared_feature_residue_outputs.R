@@ -3,7 +3,6 @@ library(dplyr)
 library(purrr)
 
 files <- unlist(snakemake@input[['tsv_summaries']])
-# files <- Sys.glob("outputs/shared_feature_residues/2_shared_residue_summaries/*tsv")
 atp_files <- files[grepl(pattern = "atp_binding.tsv", x = files)]
 lat_files <- files[grepl(pattern = "lateral_actin_contact.tsv", x = files)]
 lon_files <- files[grepl(pattern = "longitudinal_actin_contact.tsv", x = files)]
@@ -38,4 +37,3 @@ all_features <- lon %>%
   dplyr::mutate(w_avg_contacts =  (lat_num_matching + lon_num_matching)/(lat_feature_count + lon_feature_count))
 
 readr::write_tsv(all_features, snakemake@output[['all_features']])
-#write_tsv(all_features, "20221129-all-features.tsv")
