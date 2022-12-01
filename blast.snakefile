@@ -2,7 +2,9 @@ import pandas as pd
 import os
 
 rule all:
-    input: "qpa_done.txt"
+    input: 
+        "qpa_done.txt",
+        "outputs/blast/blastp_results_empty_rm.out"
 
 rule blast:
     input: "inputs/P60709_ACTB_HUMAN.fasta"
@@ -62,3 +64,11 @@ def checkpoint_determine_query_protein_accessions(wildcards):
 rule collapse_tmp:
     input: checkpoint_determine_query_protein_accessions
     output: touch("qpa_done.txt")
+
+rule parse_blast_output_rm_empty_downloads:
+    input:
+        empty = "empty.txt",
+        blast = "outputs/blast/blastp_results.out"
+    output: out = "outputs/blast/blastp_results_empty_rm.out"
+    conda: "envs/tidyverse.yml"
+    script: "snakemake/snakemake_parse_blast_results_to_config_file.R"
