@@ -41,10 +41,12 @@ calculate_shared_residues <- function(combined_feature_and_alignment, tsv = NULL
   # shared residue summary functionality
   df_summary <- combined_feature_and_alignment %>%
     dplyr::mutate(query_matches_reference = ifelse(letter_reference == letter_query, TRUE, FALSE)) %>%
+    tidyr::replace_na(list(query_matches_reference = 0)) %>%
     dplyr::group_by(feature) %>%
     dplyr::summarise(feature_count = dplyr::n(),
                      num_matching = sum(query_matches_reference),
-                     fraction_matching = sum(query_matches_reference) / sum(feature_count))
+                     fraction_matching = sum(query_matches_reference) / sum(feature_count),
+                     num_gaps_at_feature_residues = sum(is.na(position_query)))
   
   # write file
   if (!is.null(tsv)) {
