@@ -278,6 +278,7 @@ rule combine_uniprot_id_conversions:
 checkpoint create_dummy_files_for_uniprot_accession_wildcard:
     input: tsv = "outputs/foldseek/uniprot_accessions/results.tsv"
     output: outdir = directory("outputs/foldseek/uniprot_accessions_wc/")
+    conda: "envs/tidyverse.yml"
     script: "snakemake/snakemake_create_dummy_files_for_uniprot_accession_wildcard.R"
 
 rule download_alphafold_pdb_files_for_uniprot_accessions:
@@ -308,6 +309,7 @@ rule run_foldseek:
     params: refdir = "inputs/pdb/"
     conda: "envs/foldseek.yml"
     shell:'''
+    mkdir -p tmp_foldseek_folder
     foldseek easy-search {input.query} {params.refdir} {output} tmp_foldseek_folder 
     '''
 
