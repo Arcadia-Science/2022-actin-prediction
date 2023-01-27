@@ -1,4 +1,4 @@
-configfile: "snakemake_config_blast.yml"
+configfile: "snakemake_config.yml"
 
 rule all:
     input:
@@ -326,12 +326,10 @@ rule combine_foldseek_outputs:
 
 rule combine_all_outputs:
     input:
-        blast = "outputs/blast/blastp_results_empty_rm.out",
         avg_pid = "outputs/mean_pid/all_avg_pid.tsv",
         all_features = "outputs/shared_feature_residues/3_shared_residue_summaries_combined/all_shared_residues_combined.tsv",
         all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv",
         all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv",
-        class_map = "inputs/uniprot_gene_name_to_class_map.tsv"
     output: all_outputs = "outputs/all_outputs_summarized.tsv"
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_all_outputs.txt"
