@@ -254,8 +254,7 @@ rule convert_genbank_protein_accession_to_uniprot_accessions:
         else
             waiting=0
             echo "downloading results"
-            #curl -s "https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?format=tsv" > {output.results} # download the mapped ids.
-            curl -JLo {output.results} https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?fields=accession%2Cid%2Creviewed%2Cprotein_name%2Cgene_names%2Corganism_name%2Clength&format=tsv
+            curl -s "https://rest.uniprot.org/idmapping/uniprotkb/results/stream/$jobID?format=tsv" > {output.results} # download the mapped ids.
         fi
     done
     """
