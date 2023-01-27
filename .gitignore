@@ -17,3 +17,5 @@ inputs/SuisseIntl-Regular.otf
 qpa_done.txt
 scripts/rhmmer_parse.R
 *swp
+figures/
+tmp_outputs/
