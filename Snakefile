@@ -1,25 +1,7 @@
 configfile: "snakemake_config.yml"
 
 rule all:
-    input:
-        "figures/figure2b.pdf",
-        "figures/figure2c.pdf",
-        "figures/figure3e.pdf",
-        "figures/figure3f.pdf",
-        "figures/figure4c.pdf",
-        "figures/figure4d.pdf",
-        "figures/figure4e.pdf",
-        "figures/figure4f.pdf",
-        "figures/figure4g.pdf",
-        "figures/figure4h.pdf",
-        "figures/figure5c.pdf",
-        "figures/figure5d.pdf",
-        "figures/figure5e.pdf",
-        "figures/figure5f.pdf",
-        "figures/figure6a.pdf",
-        "figures/figure6b.pdf",
-        "figures/figure6c.pdf",
-        "figures/figure6d.pdf"
+    input: "outputs/all_outputs_summarized.tsv"
 
 #####################################################
 ## Estimating average pairwise identity between a 
@@ -335,29 +317,3 @@ rule combine_all_outputs:
     conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_all_outputs.txt"
     script: "snakemake/snakemake_combine_all_outputs.R"
-
-rule plot_outputs:
-    input:
-        all_outputs = "outputs/all_outputs_summarized.tsv"
-    output:
-        fig2b = "figures/figure2b.pdf",
-        fig2c = "figures/figure2c.pdf",
-        fig3e = "figures/figure3e.pdf",
-        fig3f = "figures/figure3f.pdf",
-        fig4c = "figures/figure4c.pdf",
-        fig4d = "figures/figure4d.pdf",
-        fig4e = "figures/figure4e.pdf",
-        fig4f = "figures/figure4f.pdf",
-        fig4g = "figures/figure4g.pdf",
-        fig4h = "figures/figure4h.pdf",
-        fig5c = "figures/figure5c.pdf",
-        fig5d = "figures/figure5d.pdf",
-        fig5e = "figures/figure5e.pdf",
-        fig5f = "figures/figure5f.pdf",
-        fig6a = "figures/figure6a.pdf",
-        fig6b = "figures/figure6b.pdf",
-        fig6c = "figures/figure6c.pdf",
-        fig6d = "figures/figure6d.pdf"
-    conda: "envs/tidyplot.yml"
-    benchmark: "benchmarks/plot_outputs.txt"
-    script: "snakemake/snakemake_plot_outputs.R"
