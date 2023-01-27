@@ -13,14 +13,11 @@ avg_pid <- read_tsv(snakemake@input[['avg_pid']]) %>%
          prot2 = gsub("\\.1\\|.*",  "\\.1", prot2),
          prot2 = gsub("\\.2\\|.*",  "\\.2", prot2),
          prot2 = gsub("\\.3\\|.*",  "\\.3", prot2),
-         prot2 = gsub("\\|", "_", prot2)) %>%
-  filter(prot2 %in% blast_results$sseqid) %>%
-  filter(!prot2 %in% c("NP_187818.1", "BAN39743.1", "TMW59056.1")) # filter three results where we detected inaccuracies
-  
+         prot2 = gsub("\\|", "_", prot2))
+
 # read in the shared feature residue results (lateral contact, longitudinal contats, and ATP-binding residues)
 features <- read_tsv(snakemake@input[['all_features']]) %>%
-  distinct() %>%
-  filter(protein %in% blast_results$sseqid)
+  distinct()
 
 # read in the hmm results
 hmm <- read_tsv(snakemake@input[['all_hmm']]) %>%
@@ -36,13 +33,25 @@ hmm <- read_tsv(snakemake@input[['all_hmm']]) %>%
 
 # read in the foldseek results. The foldseek results also contain the uniprot accessions, protein names, and organism information
 fsk <- read_tsv(snakemake@input[['all_fsk']]) %>%
-  distinct() %>%
-  mutate(evalue_transform = -1*log10(evalue))
+  distinct()
 
-# join everything together!
+# check if there were any foldseek results
+if(nrow(fsk > 0)){
+  fsk <- fsk %>%
+    mutate(evalue_transform = -1*log10(evalue))
+  
+  # join everything together!
+  join1 <- full_join(features, avg_pid, by = c("protein" = "prot2"))
+  join2 <- full_join(join1, fsk, by = c("protein" = "genbank"))
+  all <- full_join(join2, hmm, by = c("protein" = "query_name")) %>%
+    distinct()
+  
+  write_tsv(all, snakemake@output[['all_outputs']])
+}
+
+# else write output skipping foldseek join
 join1 <- full_join(features, avg_pid, by = c("protein" = "prot2"))
-join2 <- full_join(join1, fsk, by = c("protein" = "genbank"))
-all <- full_join(join2, hmm, by = c("protein" = "query_name")) %>%
+all <- full_join(join1, hmm, by = c("protein" = "query_name")) %>%
   distinct()
 
 write_tsv(all, snakemake@output[['all_outputs']])
