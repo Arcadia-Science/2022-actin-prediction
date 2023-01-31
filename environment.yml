@@ -4,4 +4,3 @@ channels:
    - defaults
 dependencies:
    - snakemake-minimal=7.20.0
-   - pandas=1.3.5
