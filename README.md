@@ -97,50 +97,53 @@ If you double click on it, it will look something like this:
 Below we provide a description of the columns:
 
 * `protein`:
-* **Functional annotation**:
-  * `lon_feature_count`:
-  * `lon_num_matching`:
-  * `lon_fraction_matching`:
-  * `lat_feature_count`:
-  * `lat_num_matching`:
-  * `atp_feature_count`:
-  * `atp_num_matching`:
-  * `atp_fraction_matching`:
-* **Alignment**:
-  * `w_avg_contact`:
-  * `avg_fid`:
-  * `avg_pid`:
-* **Hidden markov model**:
-  * `domain_name`:
-  * `domain_accession`:
-  * `query_accession`:
-  * `sequence_evalue`:
-  * `sequence_score`:
-  * `sequence_bias`:
-  * `best_domain_evalue`:
-  * `best_domain_score`:
-  * `best_domain_bis`:
-  * `domain_number_exp`:
-  * `domain_number_reg`:
-  * `domain_number_clu`:
-  * `domain_number_ov`:
-  * `domain_number_env`:
-  * `domain_number_dom`:
-  * `domain_number_rep`:
-  * `domain_number_inc`:
-  * `description`:
-* **Structure**:
-  *
-* if there is no foldseek output, those columns won't be in the output CSV file
-
-Two config files are included in this repository: `snakemake_config.yml` and `snakemake_config_blast.yml`. 
-`snakemake_config.yml` specifies two query protein sequences, and we have included these examples in this repository.
-If you'd like to test the pipeline, you can run it with this config file by writing `configfile = "snakemake_config.yml"` on the first line of the `Snakefile`.
-
-To run your own protein of interest through the pipeline, copy the `snakemake_config.yml`, rename it, and replace the root name of the query protein sequence with the root name of your query protein sequence.
-This should be everything that occurs before `*.fasta` in your protein sequence file name.
-Put your protein sequence in the `query_proteins` directory.
-Lastly, replace the path in the first line of the `Snakefile` with the path to your new config file and follow the "Getting started" instructions above.
+* **Functional annotation**: functional annotation based on residue identity at residues involved in the polymerization and ATPase activity of actin. `lon` stands for contacts that are important for longitudinal polymerization, `lat` stands for contacts that are important for latitudinal polymerization, and `atp` stands for residues that are important for ATPase activity.
+  * `*_feature_count`: the number of residues that were important for a specific function.
+  * `*_num_matching`: the number of residues that matched the reference.
+  * `*_fraction_matching`: the fraction of all possible matches within the category that matched to the reference.
+  * `w_avg_contact`: weighted average for all categories `lon`, `lat`, and `atp`.
+* **Alignment**: alignment annotation based on query alignment to a multiple sequence alignment of reference actin sequences.
+  * `avg_fid`: average fraction identity.
+  * `avg_pid`: average percent identity.
+* **Structure**: structural annotation performed by comparing the alphafold-predicted query structure against the PDB structure of monomeric rabbit actin. If there is no Foldseek output, those columns won't be in the output CSV file. See the [Foldseek preprint](https://www.biorxiv.org/content/10.1101/2022.02.07.479398v1) for more information on interpretting these output columns.
+  * `query`: UniProt ID
+  * `target`: reference PDB structure used for structural comparison (rabbit actin).
+  * `pident`: percent sequence identity between the query and target sequences.
+  * `alnlen`: alignment length
+  * `mismatch`: number of mismatches in the alignment.
+  * `gapopen`: gaps in alignment.
+  * `qstart`: start residue for query in alignment
+  * `qend`: end residue for query in alignment
+  * `tstart`: start residue for target in alignment
+  * `tend`: end residue for target in alignment
+  * `evalue`: main output of Foldseek that reflects the structural similarity of the query and target proteins.
+  * `bits`: information measurement
+  * `uniprot_name`: name of protein in UniProt
+  * `Reviewed`: reviewed status of protein
+  * `Protein names`: UniProt protein name
+  * `Gene Names`: UniProt gene name
+  * `Organism`: UniProt organism
+  * `Length`: UniProt length of protein
+  * `evalue_transform`: `-1*log10(evalue)`
+* **Hidden markov model**: sequence similarity annotation performed using a hidden markov model of PFAM actin. See the [HMMER user guide](http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf) for more information about the output columns.
+  * `domain_name`: PFAM name
+  * `domain_accession`: PFAM accession
+  * `query_accession`: query accession in PFAM (`NA`)
+  * `sequence_evalue`: evalue of sequence compared to the PFAM model; statistical significance of the query to the PFAM model.
+  * `sequence_score`: log-odds score of sequence compared to PFAM model. Higher scores are more similar to the HMM model.
+  * `sequence_bias`: correction term for biased sequence composition.
+  * `best_domain_evalue`: same as above, but for best-scoring domain in the sequence (some accessions have multiple domains).
+  * `best_domain_score`: same as above
+  * `best_domain_bis`: same as above
+  * `domain_number_exp`: the posterior probability of alignment starts and ends (profile B and E state alignments) with respect to target sequence position. The sum of the posterior probabilities of alignment starts (B states) over the entire target sequence is the expected number of domains in the sequence.
+  * `domain_number_reg`: number of discrete regions identified by this posterior decoding step. 
+  * `domain_number_clu`: the number of regions that had to be subjected to stochastic traceback clustering.
+  * `domain_number_ov`: for envelopes that were defined by stochastic traceback clustering, how many of them overlap other envelopes.
+  * `domain_number_env`: total number of domain envelopes identified.
+  * `domain_number_dom`: number of domains defined.
+  * `domain_number_rep`: number of domains satisfying reporting thresholds.
+  * `domain_number_inc`:  number of domains satisfying inclusion thresholds.
+  * `description`: description of the target, as free text.
 
 ## Getting started with this repository
 
