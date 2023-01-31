@@ -1,6 +1,6 @@
 query_protein: 
- - NP_001028790.1 
- - XP_001704653.1
+ - AAA99305.1
+ - AAI02952.1
 features:
  - atp_binding
  - longitudinal_actin_contact
