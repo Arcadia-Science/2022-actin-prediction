@@ -47,11 +47,12 @@ if(nrow(fsk > 0)){
     distinct()
   
   write_tsv(all, snakemake@output[['all_outputs']])
+} else {
+  
+  # else write output skipping foldseek join
+  join1 <- full_join(features, avg_pid, by = c("protein" = "prot2"))
+  all <- full_join(join1, hmm, by = c("protein" = "query_name")) %>%
+    distinct()
+  
+  write_tsv(all, snakemake@output[['all_outputs']])
 }
-
-# else write output skipping foldseek join
-join1 <- full_join(features, avg_pid, by = c("protein" = "prot2"))
-all <- full_join(join1, hmm, by = c("protein" = "query_name")) %>%
-  distinct()
-
-write_tsv(all, snakemake@output[['all_outputs']])
