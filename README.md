@@ -54,7 +54,7 @@ Binders are ephemeral instances -- after a period of inactivity, the instance is
 You're able to download files from your work before the instance is shut down if you do want to save anything.
 </details>
  
-### Upload your FASTA sequence to the Binder and edit the config file to tell the pipeline the name of your FASTA file
+### 2. Upload your FASTA sequence to the Binder and edit the config file to tell the pipeline the name of your FASTA file
 
 Once you have the Binder running, you need to upload your FASTA file to the Binder.
 The file needs to be uploaded into the `query_proteins` folder.
@@ -76,7 +76,7 @@ Then, edit the file so that your accession number is listed under `query_protein
 The accession number needs to be the same as the file name prefix that you uploaded (see the test data in `query_proteins` and annotated in the config file `snakemake_config.yml` for an example).
 Save the file and exit from the text editor.
 
-### Start the snakemake pipeline
+### 3. Start the snakemake pipeline
 
 The last step is to start the Snakemake pipeline.
 From the Launcher tab, use the `Terminal` icon to open a new terminal.
@@ -89,6 +89,8 @@ As the pipeline starts, you should see something like:
 
 ![](https://i.imgur.com/4R7x77J.png)
 
+### Explanation of outputs
+
 When the pipeline is finished, you'll have a new file named `outputs/all_outputs_summarized.tsv`. 
 If you double click on it, it will look something like this:
 
@@ -96,7 +98,7 @@ If you double click on it, it will look something like this:
 
 Below we provide a description of the columns:
 
-* `protein`:
+* `protein`: GenBank accession of protein.
 * **Functional annotation**: functional annotation based on residue identity at residues involved in the polymerization and ATPase activity of actin. `lon` stands for contacts that are important for longitudinal polymerization, `lat` stands for contacts that are important for latitudinal polymerization, and `atp` stands for residues that are important for ATPase activity.
   * `*_feature_count`: the number of residues that were important for a specific function.
   * `*_num_matching`: the number of residues that matched the reference.
