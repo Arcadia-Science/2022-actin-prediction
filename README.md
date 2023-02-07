@@ -23,7 +23,7 @@ If you're interested in running the pipeline on your sequence(s) of interest, ma
 2. The sequence should represent a suspected actin, actin-like, actin-related, or other sequence that is similar to actin.
 3. The sequence must be available on GenBank. This is because the pipeline uses pre-calculated alphafold PDB structures based on the UniProt database. The pipeline provides a conversion between the GenBank identifier and the UniProt identifier, but the input file name must be the GenBank identifer (see below).
 
-You need to do three things start the pipeline on your own FASTA sequence.
+You need to do three things to start the pipeline on your own FASTA sequence.
 We provide an overview of these steps first, and then provide more details below.
 
 1. Launch Binder ([![Binder](https://aws-uswest2-binder.pangeo.io/badge_logo.svg)](https://aws-uswest2-binder.pangeo.io/v2/gh/Arcadia-Science/2022-actin-prediction/ter/binderize))
@@ -34,7 +34,7 @@ We provide an overview of these steps first, and then provide more details below
 
 The first step is to launch the Binder instance.
 Binder is a service that turns a Git repo into a collection of interactive notebooks that can be executed on a temporary cloud machine.
-Binder is currently free, so there is no cost to use to try it out!
+Binder is currently free, so there is no cost to using it!
 We built the Binder for this repository on [Pangeo Binder](https://pangeo-binder.readthedocs.io/en/prod/).
 This BinderHub provides slightly more powerful compute, but [to combat users who were using the service illicitly](https://github.com/pangeo-data/pangeo-binder/issues/195), you have to login via GitHub and can only have one instance running at a time. 
 GitHub accounts are also free, so you can create one if you don't already have one.
