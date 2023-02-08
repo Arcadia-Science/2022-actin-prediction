@@ -1,6 +1,6 @@
 query_protein: 
- - P63258_ACTG_BOVIN
- - P51775_ACT_GIAIN
+ - AAA99305.1
+ - AAI02952.1
 features:
  - atp_binding
  - longitudinal_actin_contact
