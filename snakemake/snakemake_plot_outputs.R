@@ -75,13 +75,22 @@ pdf(snakemake@output[['fig3e']], width = 5, height = 3)
 fig3e
 dev.off()
 
-fig3f <- ggplot(all %>% filter(!is.na(evalue_transform)), 
-                aes(x = avg_pid, y = evalue_transform)) +
-  geom_point(size = .5) +
+fig3f <- ggplot(all %>% 
+                  filter(!is.na(evalue_transform)) %>% 
+                  mutate(lbin = ifelse(Length < 300, "< 300",
+                                       ifelse(Length > 300 & Length < 450, "300 – 450", "> 450")),
+                         lbin = factor(lbin, levels = c("< 300", "300 – 450", "> 450"))) %>% 
+                  mutate(info = paste0(Organism, ": ", protein, ", ", class)), 
+                aes(x = avg_pid, y = evalue_transform, color = lbin, label = info)) +
+  geom_point(size = 0.5) +
   xlim(0, 100) + 
   scale_y_continuous(limits = c(0, 80), expand = c(0, 0)) +
-  labs(x = "Average global percent identity (%)", y = "Structural similarity") +
-  theme_arcadia
+  labs(x = "Average global percent identity (%)", y = "Structural similarity",
+       color = "Protein length") +
+  theme_arcadia +
+  theme(legend.position = c(0.2, 0.75)) +
+  scale_color_manual(values = c("#09090A", "#F28360", "#73B5E3")) +
+  guides(colour = guide_legend(override.aes = list(size=1.5)))
 
 pdf(snakemake@output[['fig3f']], width = 5, height = 3)
 fig3f
