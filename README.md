@@ -13,7 +13,7 @@ This repository uses a variety of computational approaches to predict whether a 
 
 ## How to run your own FASTA file through the pipeline using Binder
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/binder)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/main)
 
 <details>
   <summary>More information on binder and what happens when you click the launch binder button.</summary>
@@ -41,7 +41,7 @@ An overview is provided here with more detailed instructions below.
 You need to do three things to start the pipeline on your own FASTA sequence.
 We provide an overview of these steps first, and then provide more details below.
 
-1. Launch Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/binder)
+1. Launch Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/main)
 2. Upload your FASTA sequence to the Binder and edit the config file to tell the pipeline the name of your FASTA file.
 3. Start the snakemake pipeline.
 
