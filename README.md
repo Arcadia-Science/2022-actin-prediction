@@ -80,7 +80,7 @@ From the Launcher tab, use the `Terminal` icon to open a new terminal.
 
 ![](https://i.imgur.com/SozBrHJ.png)
 
-Then, enter the command `snakemake -j 2` and allow the pipeline to run.
+Then, enter the command `snakemake -j 1` and allow the pipeline to run.
 If you uploaded a single protein, it should take about 1-2 minutes.
 As the pipeline starts, you should see something like:
 
