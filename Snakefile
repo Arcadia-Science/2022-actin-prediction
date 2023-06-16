@@ -27,6 +27,7 @@ rule mafft_multiple_sequence_align_query_protein_and_confident_actins:
     '''
     input: "outputs/mean_pid/{query_protein}_combined.fasta"
     output: "outputs/mean_pid/{query_protein}_msa.fasta"
+    conda: "envs/mafft.yml"
     benchmark: "benchmarks/msa_with_confident_actins_{query_protein}.txt"
     shell:'''
     mafft-linsi {input} > {output}
@@ -38,6 +39,7 @@ rule calculate_pairwise_identity:
     output: 
         tsv = "outputs/mean_pid/{query_protein}_pid.tsv",
         pdf = "outputs/mean_pid/{query_protein}_pid.pdf",
+    conda: "envs/tidybio3d.yml"
     benchmark: "benchmarks/calculate_pid_{query_protein}.txt"
     script: "snakemake/snakemake_calculate_pairwise_identity.R"
 
@@ -46,6 +48,7 @@ rule combine_pairwise_identity_outputs:
     output:
         pid = "outputs/mean_pid/all_pid.tsv",
         avg_pid = "outputs/mean_pid/all_avg_pid.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_pid.txt"
     script: "snakemake/snakemake_combine_pairwise_identity_outputs.R"
 
@@ -72,6 +75,7 @@ rule mafft_align_query_protein_to_human_beta_actin:
     output:
         mafft_map = "query_proteins/{query_protein}.fasta.map",
         alignment= "outputs/shared_feature_residues/0_mafft/{query_protein}_vs_P60709_ACTB_HUMAN.fasta"
+    conda: "envs/mafft.yml"
     benchmark: "benchmarks/mafft_human_beta_actin_{query_protein}.txt"
     shell:'''
     mafft --auto --mapout --keeplength --add {input.query_fasta} {input.human_beta_actin} > {output.alignment}
@@ -88,6 +92,7 @@ rule calculate_shared_feature_residues:
     output:
         tsv="outputs/shared_feature_residues/1_shared_residue_information/{query_protein}-{features}.tsv",
         tsv_summary="outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/calculate_shared_feature_residues_{query_protein}_{features}.txt"
     script: "snakemake/snakemake_calculate_shared_feature_residues.R"
 
@@ -95,6 +100,7 @@ rule combine_shared_feature_residue_outputs:
     input: 
         tsv_summaries = expand("outputs/shared_feature_residues/2_shared_residue_summaries/{query_protein}-{features}.tsv", query_protein = config["query_protein"], features = config["features"])
     output: all_features = "outputs/shared_feature_residues/3_shared_residue_summaries_combined/all_shared_residues_combined.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_shared_feature_residues.txt"
     script: "snakemake/snakemake_combine_shared_feature_residue_outputs.R"
 
@@ -119,6 +125,7 @@ rule download_pfam:
 rule hmmpress:
     input: "inputs/pfam/PF00022.hmm"
     output: "inputs/pfam/PF00022.hmm.h3i"
+    conda: "envs/hmmer.yml"
     benchmark: "benchmarks/hmm/PF00022-hmmpress.txt"
     shell:'''
     hmmpress {input}
@@ -133,6 +140,7 @@ rule hmmscan:
         out = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan.out",
         tbl = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-tbl.out",
         dom = "outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-dom.out"
+    conda: "envs/hmmer.yml"
     benchmark: "benchmarks/hmm/hmmscan_{query_protein}.txt"
     shell:'''
     hmmscan --cut_ga -o {output.out} --tblout {output.tbl} --domtblout {output.dom} {input.hmm} {input.query_protein} 
@@ -140,6 +148,7 @@ rule hmmscan:
 
 rule download_hmm_parser:
     output: "scripts/rhmmer_parse.R"
+    conda: "envs/curl.yml"
     shell:'''
     curl -JLo {output} https://raw.githubusercontent.com/arendsee/rhmmer/master/R/parse.R
     '''
@@ -149,6 +158,7 @@ rule combine_hmm_outputs:
         rhmmer = "scripts/rhmmer_parse.R",
         tbl = expand("outputs/hmm/hmmscan/{query_protein}-PF00022-hmmscan-tbl.out", query_protein = config["query_protein"]) 
     output: all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_hmm.txt"
     script: "snakemake/snakemake_combine_hmm_outputs.R"
 
@@ -164,6 +174,7 @@ checkpoint chunk_genbank_accessions_for_uniprot_id_conversion:
     '''
     input: fastas=expand("query_proteins/{query_protein}.fasta", query_protein = config["query_protein"])
     output: outdir=directory("outputs/foldseek/chunked_accessions/")
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/foldseek/chunk_query_proteins.txt"
     script: "snakemake/snakemake_chunk_genbank_accessions_for_uniprot_id_conversion.R" 
 
@@ -197,6 +208,7 @@ rule convert_genbank_protein_accession_to_uniprot_accessions:
         query="outputs/foldseek/uniprot_accessions/query{grp}.txt",
         query_status="outputs/foldseek/uniprot_accessions/query_status{grp}.txt",
         results="outputs/foldseek/uniprot_accessions/results{grp}.txt"
+    conda: "envs/curl.yml"
     benchmark: "benchmarks/foldseek/convert_genbank_to_uniprot{grp}.txt"
     shell:"""
     # submit the curl "form" to uniprot to start the query
@@ -240,17 +252,20 @@ def chunk_genbank_accessions_for_uniprot_id_conversion(wildcards):
 rule combine_uniprot_id_conversions:
     input: results=chunk_genbank_accessions_for_uniprot_id_conversion,
     output: tsv = "outputs/foldseek/uniprot_accessions/results.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/foldseek/convert_genbank_to_uniprot_combine_results.txt"
     script: "snakemake/snakemake_combine_uniprot_id_conversions.R"
 
 checkpoint create_dummy_files_for_uniprot_accession_wildcard:
     input: tsv = "outputs/foldseek/uniprot_accessions/results.tsv"
     output: outdir = directory("outputs/foldseek/uniprot_accessions_wc/")
+    conda: "envs/tidyverse.yml"
     script: "snakemake/snakemake_create_dummy_files_for_uniprot_accession_wildcard.R"
 
 rule download_alphafold_pdb_files_for_uniprot_accessions:
     input: "outputs/foldseek/uniprot_accessions_wc/{uniprot_acc}.txt"
     output: "outputs/foldseek/uniprot_alphafold_pdb_structures/AF-{uniprot_acc}-F1-model_V4.pdb"
+    conda: "envs/curl.yml"
     benchmark: "benchmarks/foldseek/download_alphafold_pdb_files/{uniprot_acc}.txt"
     shell:'''
     curl -JLo {output} https://alphafold.ebi.ac.uk/files/AF-{wildcards.uniprot_acc}-F1-model_v4.pdb
@@ -273,6 +288,7 @@ rule run_foldseek:
         query = "outputs/foldseek/uniprot_alphafold_pdb_structures/AF-{uniprot_acc}-F1-model_V4.pdb"
     output: "outputs/foldseek/foldseek/{uniprot_acc}_vs_1j6z.tsv"
     params: refdir = "inputs/pdb/"
+    conda: "envs/foldseek.yml"
     shell:'''
     mkdir -p tmp_foldseek_folder
     foldseek easy-search {input.query} {params.refdir} {output} tmp_foldseek_folder 
@@ -283,6 +299,7 @@ rule combine_foldseek_outputs:
         uniprot_acc = "outputs/foldseek/uniprot_accessions/results.tsv",
         fsk = create_dummy_files_for_uniprot_accession_wildcard
     output: all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_foldseek.txt"
     script: "snakemake/snakemake_combine_foldseek_outputs.R"
 
@@ -297,5 +314,6 @@ rule combine_all_outputs:
         all_hmm = "outputs/hmm/hmmscan/all-hmmscan-tbl-out.tsv",
         all_fsk  = "outputs/foldseek/foldseek/all_foldseek.tsv",
     output: all_outputs = "outputs/all_outputs_summarized.tsv"
+    conda: "envs/tidyverse.yml"
     benchmark: "benchmarks/combine_all_outputs.txt"
     script: "snakemake/snakemake_combine_all_outputs.R"
