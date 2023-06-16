@@ -151,7 +151,7 @@ You can find operating system-specific instructions for installing miniconda [he
 After installing conda and [mamba](https://mamba.readthedocs.io/en/latest/), run the following command to create the pipeline run environment.
 
 ```
-mamba env create -n actin --file environment.yml
+mamba env create -n actin --file actin_env.yml
 conda activate actin
 ```
 
@@ -179,7 +179,7 @@ See the [above section](#how-to-run-your-own-fasta-file-through-the-pipeline-usi
 ### Snakemake
 
 Snakemake manages rule-specific environments via the `conda` directive and using environment files in the `envs/` directory.
-Snakemake itself is installed in the main conda environment `actin` specified in the `environment.yml` file.
+Snakemake itself is installed in the main conda environment `actin` specified in the `actin_env.yml` file.
 
 Further details TBD.
 
