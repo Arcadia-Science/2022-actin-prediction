@@ -13,7 +13,7 @@ This repository uses a variety of computational approaches to predict whether a 
 
 ## How to run your own FASTA file through the pipeline using Binder
 
-[![Binder](https://aws-uswest2-binder.pangeo.io/badge_logo.svg)](https://aws-uswest2-binder.pangeo.io/v2/gh/Arcadia-Science/2022-actin-prediction/main)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/main)
 
 <details>
   <summary>More information on binder and what happens when you click the launch binder button.</summary>
@@ -41,7 +41,7 @@ An overview is provided here with more detailed instructions below.
 You need to do three things to start the pipeline on your own FASTA sequence.
 We provide an overview of these steps first, and then provide more details below.
 
-1. Launch Binder ([![Binder](https://aws-uswest2-binder.pangeo.io/badge_logo.svg)](https://aws-uswest2-binder.pangeo.io/v2/gh/Arcadia-Science/2022-actin-prediction/main))
+1. Launch Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arcadia-Science/2022-actin-prediction/main)
 2. Upload your FASTA sequence to the Binder and edit the config file to tell the pipeline the name of your FASTA file.
 3. Start the snakemake pipeline.
 
@@ -50,9 +50,6 @@ We provide an overview of these steps first, and then provide more details below
 The first step is to launch the Binder instance.
 Binder is a service that turns a Git repo into a collection of interactive notebooks that can be executed on a temporary cloud machine.
 Binder is currently free, so there is no cost to using it!
-We built the Binder for this repository on [Pangeo Binder](https://pangeo-binder.readthedocs.io/en/prod/).
-This BinderHub provides slightly more powerful compute, but [to combat users who were using the service illicitly](https://github.com/pangeo-data/pangeo-binder/issues/195), you have to login via GitHub and can only have one instance running at a time. 
-GitHub accounts are also free, so you can create one if you don't already have one.
 
 ### 2. Upload your FASTA sequence to the Binder and edit the config file to tell the pipeline the name of your FASTA file
 
@@ -83,7 +80,7 @@ From the Launcher tab, use the `Terminal` icon to open a new terminal.
 
 ![](https://i.imgur.com/SozBrHJ.png)
 
-Then, enter the command `snakemake --use-conda -j 2` and allow the pipeline to run.
+Then, enter the command `snakemake -j 1` and allow the pipeline to run.
 If you uploaded a single protein, it should take about 1-2 minutes.
 As the pipeline starts, you should see something like:
 
@@ -154,7 +151,7 @@ You can find operating system-specific instructions for installing miniconda [he
 After installing conda and [mamba](https://mamba.readthedocs.io/en/latest/), run the following command to create the pipeline run environment.
 
 ```
-mamba env create -n actin --file environment.yml
+mamba env create -n actin --file actin_env.yml
 conda activate actin
 ```
 
@@ -182,7 +179,7 @@ See the [above section](#how-to-run-your-own-fasta-file-through-the-pipeline-usi
 ### Snakemake
 
 Snakemake manages rule-specific environments via the `conda` directive and using environment files in the `envs/` directory.
-Snakemake itself is installed in the main conda environment `actin` specified in the `environment.yml` file.
+Snakemake itself is installed in the main conda environment `actin` specified in the `actin_env.yml` file.
 
 Further details TBD.
 
